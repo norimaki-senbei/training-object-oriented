@@ -2,7 +2,6 @@
 
 
 // 本の情報を扱うクラス
-
 class Book {
   // 初期化時に使われるコンストラクタ
   constructor(title, pageSize) {
@@ -86,6 +85,10 @@ class LimitedBookshelf extends Bookshelf {
 
   // 明示的にメソッドを書かれていませんがBookshelfのメソッドを呼び出すことができます。
   // 10行程度でほぼ同じ機能を持ちながら、少し動きの違う仕組みを導入できました。
+}
+
+class RejectedBocchanBooksshelf extends bookshelf() {
+
 }
 
 let bookshelf = new LimitedBookshelf;
