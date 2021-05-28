@@ -87,7 +87,14 @@ class LimitedBookshelf extends Bookshelf {
   // 10行程度でほぼ同じ機能を持ちながら、少し動きの違う仕組みを導入できました。
 }
 
-class RejectedBocchanBooksshelf extends bookshelf() {
+class RejectedBocchanBooksshelf extends Bookshelf {
+    addBook(book) {
+    // 自分自身（this）のcanAddBookメソッドを呼び出す
+    if (!this.canAddBook(book) || book.title === '坊ちゃん') return false;
+
+    this.books.push(book);
+    return true;
+  }
 
 }
 
@@ -103,3 +110,9 @@ if (!bookshelf.addBook(new Book("門", 345))) {
 
 console.log(bookshelf.findBookByTitle("こころ"));
 console.log(bookshelf.sumPageSize());
+
+//坊ちゃん追加できない本棚クラス
+let bookshelf2 = new RejectedBocchanBooksshelf;
+if (!bookshelf2.addBook(new Book("坊ちゃん", 520))) {
+  console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf2.size()}`);
+}
