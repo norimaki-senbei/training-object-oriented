@@ -101,6 +101,17 @@ class RejectedBocchanBooksshelf extends Bookshelf {
 
 }
 
+class ThinBooksshelf extends Bookshelf {
+  constructor(maxPageSize = 20) {
+    super(); // 親のconstructorを呼びます
+    this.maxPageSize = maxPageSize;
+  }
+  canAddBook(book) {
+    return book.pageSize < this.maxPageSize;
+  }
+
+}
+
 let bookshelf = new LimitedBookshelf;
 
 bookshelf.addBook(new Book("坊ちゃん", 520));
@@ -117,5 +128,17 @@ console.log(bookshelf.sumPageSize());
 //坊ちゃん追加できない本棚クラス
 let bookshelf2 = new RejectedBocchanBooksshelf;
 if (!bookshelf2.addBook(new Book("坊ちゃん", 520))) {
-  console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf2.size()}`);
+  console.log(`新しい本を追加できませんでした。`);
 }
+
+//20ページ未満しか保存できないクラス
+console.log("---Thin bookshelf---");
+let bookshelf3 = new ThinBooksshelf;
+
+if (!bookshelf3.addBook(new Book("坊ちゃん", 520))) {
+  console.log(`新しい本を追加できませんでした。`);
+}else {console.log("保存できました");}
+
+if (!bookshelf3.addBook(new Book("坊ちゃん", 10))) {
+  console.log(`新しい本を追加できませんでした。`);
+}else {console.log("保存できました");}
