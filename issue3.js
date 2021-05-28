@@ -88,6 +88,9 @@ class LimitedBookshelf extends Bookshelf {
 }
 
 class RejectedBocchanBooksshelf extends Bookshelf {
+    constructor() {
+    super();
+  }
     addBook(book) {
     // 自分自身（this）のcanAddBookメソッドを呼び出す
     if (!this.canAddBook(book) || book.title === '坊ちゃん') return false;
