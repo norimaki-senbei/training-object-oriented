@@ -76,11 +76,27 @@ class LimitedBookshelf extends Bookshelf {
   constructor(maxSize = 3) {
     super(); // 親のconstructorを呼びます
     this.maxSize = maxSize;
+    this.rejectCount = 0;
   }
 
   // 親クラスが作っているメソッドを上書き（オーバーライド）できます。
   canAddBook(book) {
     return this.books.length < this.maxSize;
+  }
+
+  addBook(book) {
+    // 自分自身（this）のcanAddBookメソッドを呼び出す
+    if (!this.canAddBook(book)) {
+      this.rejectCount = this.rejectCount + 1;
+      return false;
+    }
+
+    this.books.push(book);
+    return true;
+  }
+
+  getRejectCount() {
+    return this.rejectCount;
   }
 
   // 明示的にメソッドを書かれていませんがBookshelfのメソッドを呼び出すことができます。
@@ -98,6 +114,7 @@ class RejectedBocchanBooksshelf extends Bookshelf {
     this.books.push(book);
     return true;
   }
+
 
 }
 
@@ -121,6 +138,13 @@ bookshelf.addBook(new Book("こころ", 876));
 if (!bookshelf.addBook(new Book("門", 345))) {
   console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf.size()}`);
 }
+
+console.log(`拒否回数：${bookshelf.getRejectCount()}`);
+
+if (!bookshelf.addBook(new Book("門", 345))) {
+  console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf.size()}`);
+}
+console.log(`拒否回数：${bookshelf.getRejectCount()}`);
 
 console.log(bookshelf.findBookByTitle("こころ"));
 console.log(bookshelf.sumPageSize());
