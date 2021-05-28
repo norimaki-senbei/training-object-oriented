@@ -125,16 +125,15 @@ class RentalBookshelf extends Bookshelf {
   }
   rentBook(book) {
     //貸し出し中であれば借りれない
-    if (this.isRented(book)) {
-      return console.log("現在貸し出し中です");
-    }
-    //タイトルに一致する本を削除
-    for(let i = 0; i < this.books.length; i++) {
-      if(this.books[i].title === book.title) {
-        this.rentedBooks.push(book);
-        this.books.splice(i,1);
+    if (!this.isRented(book)) {
+      //タイトルに一致する本を削除
+      for(let i = 0; i < this.books.length; i++) {
+        if(this.books[i].title === book.title) {
+          this.rentedBooks.push(book);
+          this.books.splice(i,1);
+        }
       }
-    }
+    }else { return console.log("現在貸し出し中です"); }
   }
 
   returnBook(book) {
@@ -152,12 +151,8 @@ class RentalBookshelf extends Bookshelf {
   }
 
   isRented(book) {
-    for(let i = 0; i < this.rentedBooks.length; i++) {
-      if(this.rentedBooks[i].title === book.title) {
-        return true;
-      }
-    }
-    return false;
+
+    return this.rentedBooks.find(rentedBook => rentedBook.title === book.title);
   }
 }
 
@@ -173,15 +168,15 @@ let bookshelf = RentalBookshelf.valueOf(books);
 
 bookshelf.rentBook(new Book("坊ちゃん", 520));
 console.log(bookshelf.listRentedBooks());
-if(bookshelf.isRented(new Book("坊ちゃん", 520))) {
-  console.log("貸し出し中です");
-}else {console.log("貸し出し中ではありません");}
+if(!bookshelf.isRented(new Book("坊ちゃん", 520))) {
+  console.log("貸し出し中でではありません");
+}else {console.log("貸し出し中です");}
 
 bookshelf.returnBook(new Book("坊ちゃん", 520));
 console.log(bookshelf.listRentedBooks());
-if(bookshelf.isRented(new Book("坊ちゃん", 520))) {
-  console.log("貸し出し中です");
-}else {console.log("貸し出し中ではありません");}
+if(!bookshelf.isRented(new Book("坊ちゃん", 520))) {
+  console.log("貸し出し中でではありません");
+}else {console.log("貸し出し中です");}
 
 
 
