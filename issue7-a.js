@@ -70,67 +70,49 @@ class Bookshelf {
   }
 }
 
-// 格納できる本の数が指定できる本棚クラス
-class LimitedBookshelf extends Bookshelf {
-  constructor(maxSize = 3) {
-    super(); // 親のconstructorを呼びます
-    this.maxSize = maxSize;
-    this.rejectCount = 0;
-  }
-
-  // 親クラスが作っているメソッドを上書き（オーバーライド）できます。
-  canAddBook(book) {
-    return this.books.length < this.maxSize;
-  }
+class DebugBookshelf extends Bookshelf {
 
   addBook(book) {
     // 自分自身（this）のcanAddBookメソッドを呼び出す
     if (!this.canAddBook(book)) {
-      this.rejectCount = this.rejectCount + 1;
+      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: false`);
       return false;
+    } else {
+      this.books.push(book);
+      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
+      return true;
     }
-
-    this.books.push(book);
-    return true;
   }
 
-  getRejectCount() {
-    return this.rejectCount;
+  findBookByTitle(title) {
+    for(let i = 0; i < this.books.length; i++) {
+      if (this.books[i].getTitle() === title) {
+        console.debug(`引数: ${title}, 戻り値: ${JSON.stringify(this.books[i])}`);
+        return this.books[i];
+      }
+    }
+    console.debug(`引数: ${title}, 戻り値: null`);
+    return null;
   }
 
-  // 明示的にメソッドを書かれていませんがBookshelfのメソッドを呼び出すことができます。
-  // 10行程度でほぼ同じ機能を持ちながら、少し動きの違う仕組みを導入できました。
-}
-
-class RejectedBocchanBooksshelf extends Bookshelf {
-  constructor() {
-   super();
-  }
-  addBook(book) {
-    // 自分自身（this）のcanAddBookメソッドを呼び出す
-    if (!this.canAddBook(book)) return false;
-    this.books.push(book);
-    return true;
-  }
   canAddBook(book) {
-    return book.title === '坊ちゃん';
-  }
-
-
-}
-
-class ThinBooksshelf extends Bookshelf {
-  constructor(maxPageSize = 20) {
-    super(); // 親のconstructorを呼びます
-    this.maxPageSize = maxPageSize;
-  }
-  canAddBook(book) {
-    return book.pageSize < this.maxPageSize;
+    console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
+    return true; // デフォルトでは何も制限を行わないのでどんな時も本を追加できる
   }
 
 }
 
-let bookshelf = new LimitedBookshelf;
+
+process.env.NODE_ENV ='development';
+function createBookshelf() {
+  if(process.env.NODE_ENV === 'development') {
+    return new DebugBookshelf;
+  } else {
+    return new Bookshelf;
+  }
+  }
+
+let bookshelf = createBookshelf();
 
 bookshelf.addBook(new Book("坊ちゃん", 520));
 bookshelf.addBook(new Book("我輩は猫である", 454));
@@ -140,30 +122,5 @@ if (!bookshelf.addBook(new Book("門", 345))) {
   console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf.size()}`);
 }
 
-console.log(`拒否回数：${bookshelf.getRejectCount()}`);
-
-if (!bookshelf.addBook(new Book("門", 345))) {
-  console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf.size()}`);
-}
-console.log(`拒否回数：${bookshelf.getRejectCount()}`);
-
 console.log(bookshelf.findBookByTitle("こころ"));
 console.log(bookshelf.sumPageSize());
-
-//坊ちゃん追加できない本棚クラス
-let bookshelf2 = new RejectedBocchanBooksshelf;
-if (!bookshelf2.addBook(new Book("坊ちゃん", 520))) {
-  console.log(`新しい本を追加できませんでした。`);
-}
-
-//20ページ未満しか保存できないクラス
-console.log("---Thin bookshelf---");
-let bookshelf3 = new ThinBooksshelf;
-
-if (!bookshelf3.addBook(new Book("坊ちゃん", 520))) {
-  console.log(`新しい本を追加できませんでした。`);
-}else {console.log("保存できました");}
-
-if (!bookshelf3.addBook(new Book("坊ちゃん", 10))) {
-  console.log(`新しい本を追加できませんでした。`);
-}else {console.log("保存できました");}
