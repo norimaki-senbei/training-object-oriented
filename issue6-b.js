@@ -18,7 +18,6 @@ class Member {
 
 class PointCalculator {
   #results
-  #sum
 
   constructor(name, point) {
     this.#results = []
@@ -33,9 +32,8 @@ class PointCalculator {
 
   sumPoints() {
     //reduce使って書き換える
-    const list = this.getPointList();
-    const sum = list.reduce((prev, current) => {
-      return prev + current;
+    const sum = this.#results.reduce((prev, current) => {
+      return prev + current.getPoint();
     }, 0)
     return sum;
   }
@@ -44,20 +42,12 @@ class PointCalculator {
     return this.sumPoints()/this.#results.length;
   }
 
-  getPointList() {
-    const list = this.#results.map((result) => {
-      return result.getPoint();
-    })
-    return list
-  }
-
   getHighestScore() {
-    const list = this.getPointList();
-    const highestPoint = list.reduce((prev, current) => {
-      return prev > current ? prev : current;
-    }, 0);
-    const index = list.indexOf(highestPoint);
-    return this.#results[index].getName();
+    function compareFunc(a, b) {
+     return b.getPoint() - a.getPoint();
+    }
+    const sort = this.#results.sort(compareFunc)
+    return sort[0].getName();
   }
 
   addMember(member) {
