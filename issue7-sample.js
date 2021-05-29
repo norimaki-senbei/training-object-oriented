@@ -68,7 +68,7 @@ class DebugBook extends Book{
 
 //環境変数に応じてインスタンス化するクラスを変えるメソッド
 function createBook(title, pageSize) {
-  if(ProcessingInstruction.env.NODE_ENV == 'development') {
+  if(process.env.NODE_ENV == 'development') {
     return new DebugBook(title, pageSize);
   } else {
     return new Book(title, pageSize);
@@ -77,6 +77,7 @@ function createBook(title, pageSize) {
 
 //NODE_ENV=development node issue7.js
 //と実行するとでバック時の動作
+process.env.NODE_ENV = 'development';
 console.log(process.env.NODE_ENV);
 
 let books = [];
@@ -89,4 +90,5 @@ console.log(nekoden.getPageSize());
 books.push(nekoden);
 
 books.push(createBook("こころ", 876));
+console.log(findBookByTitle(books, "こころ"));
 console.log(sumPageSize(books));
