@@ -32,11 +32,12 @@ class PointCalculator {
   }
 
   sumPoints() {
-    this.#sum = 0;
-    for(let i = 0; i < this.#results.length; i++) {
-      this.#sum = this.#sum + this.#results[i].getPoint();
-    }
-    return this.#sum;
+    //reduce使って書き換える
+    const list = this.getPointList();
+    const sum = list.reduce((prev, current) => {
+      return prev + current;
+    }, 0)
+    return sum;
   }
 
   avaragePoitns() {
