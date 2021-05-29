@@ -31,6 +31,16 @@ class VendingMachine {
     this.stock = [];
   }
 
+  static valueOf(arrayOfHash) {
+    let vendingMachine = new this;
+    for (let i = 0; i < arrayOfHash.length; i++) {
+      let hash = arrayOfHash[i];
+      let item = new Item(hash.name, hash.price);
+      vendingMachine.addItem(item);
+    }
+    return vendingMachine;
+  }
+
   addItem(item) {
     // 自分自身（this）のcanAddBookメソッドを呼び出す
     if (!this.canAddItem(item)) return false;
@@ -40,81 +50,31 @@ class VendingMachine {
   }
 
   canAddItem(item) {
-    return true; // デフォルトでは何も制限を行わないのでどんな時も本を追加できる
+    return true;
   }
 
-  findBookByTitle(title) {
-    for(let i = 0; i < this.books.length; i++) {
-      if (this.books[i].getTitle() === title) return this.books[i];
+  buy(productName, cash) {
+    const item = this.stock.filter((object) => {
+      return object.getName() === productName;
+    }).shift();
+    const change = cash - item.getPrice();
+    if(change >= 0) {
+      this.stock.splice(this.stock.indexOf(item), 1);
+      return item;
     }
-    return null;
   }
 
-  sumPageSize() {
-    let size = 0;
-    for(let i = 0; i < this.books.length; i++) {
-      size += this.books[i].getPageSize();
-    }
-    return size;
+  canBuy(productName) {
+    const result = this.stock.find((object) => object.getName() === productName);
+    return result !== undefined;//在庫があればtrue
   }
-
-  size() {
-    return this.books.length;
-  }
-
 }
 
-class DebugVendingMachine extends VendingMachine {
+let item = [{ name: 'コーラ', price: 120 }, { name: 'お茶', price: 80 }, { name: 'お茶', price: 80 }, { name: 'オレンジジュース', price: 100 }, { name: 'コーラ', price: 120 }]
+let vendingMachine = VendingMachine.valueOf(item);
 
-  addBook(book) {
-    // 自分自身（this）のcanAddBookメソッドを呼び出す
-    if (!this.canAddBook(book)) {
-      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: false`);
-      return false;
-    } else {
-      this.books.push(book);
-      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
-      return true;
-    }
-  }
+console.log(vendingMachine.buy('お茶', 120));
 
-  findBookByTitle(title) {
-    for(let i = 0; i < this.books.length; i++) {
-      if (this.books[i].getTitle() === title) {
-        console.debug(`引数: ${title}, 戻り値: ${JSON.stringify(this.books[i])}`);
-        return this.books[i];
-      }
-    }
-    console.debug(`引数: ${title}, 戻り値: null`);
-    return null;
-  }
-
-  canAddBook(book) {
-    console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
-    return true; // デフォルトでは何も制限を行わないのでどんな時も本を追加できる
-  }
-
-}
-
-
-//process.env.NODE_ENV ='development';
-function createVendingMachine() {
-  if(process.env.NODE_ENV === 'development') {
-    return new DebugVendingMachine;
-  } else {
-    return new VendingMachine;
-  }
-  }
-
-let vendingMachine = createVendingMachine();
-
-vendingMachine.addItem(new Item("コーラ", 120));
-vendingMachine.addItem(new Item("オレンジジュース", 100));
-vendingMachine.addItem(new Item("お茶", 80));
-
-//if (!bookshelf.addBook(new Book("門", 345))) {
-//  console.log(`新しい本を追加できませんでした。今の本の数: ${bookshelf.size()}`);
-//}
-
-//console.log(bookshelf.findBookByTitle("こころ"));
-//console.log(bookshelf.sumPageSize());
+if(vendingMachine.canBuy('コーラ')) {
+  console.log('購入できます');
+} else { console.log('購入できません'); }
