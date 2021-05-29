@@ -54,14 +54,22 @@ class VendingMachine {
   }
 
   buy(productName, cash) {
-    const item = this.stock.filter((object) => {
-      return object.getName() === productName;
-    }).shift();
-    const change = cash - item.getPrice();
-    if(change >= 0) {
+    try{
+      if(!this.canBuy(productName)) { throw new Error('在庫がないよ'); }
+      const item = this.stock.filter((object) => {
+        return object.getName() === productName;
+      }).shift();
+      const change = cash - item.getPrice();
+
+      if(change < 0) { throw new Error('お金が足りないよ'); }
+
       this.stock.splice(this.stock.indexOf(item), 1);
       return item;
+
+    } catch(err) {
+      console.log(err);
     }
+
   }
 
   canBuy(productName) {
@@ -73,8 +81,15 @@ class VendingMachine {
 let item = [{ name: 'コーラ', price: 120 }, { name: 'お茶', price: 80 }, { name: 'お茶', price: 80 }, { name: 'オレンジジュース', price: 100 }, { name: 'コーラ', price: 120 }]
 let vendingMachine = VendingMachine.valueOf(item);
 
+console.log(vendingMachine.buy('お茶', 80));
+console.log(vendingMachine.buy('お茶', 10));
+console.log(vendingMachine.buy('お茶', 120));
 console.log(vendingMachine.buy('お茶', 120));
 
 if(vendingMachine.canBuy('コーラ')) {
+  console.log('購入できます');
+} else { console.log('購入できません'); }
+
+if(vendingMachine.canBuy('お茶')) {
   console.log('購入できます');
 } else { console.log('購入できません'); }
