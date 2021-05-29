@@ -18,7 +18,6 @@ class Member {
 
 class PointCalculator {
   #results
-
   constructor(name, point) {
     this.#results = []
   }
