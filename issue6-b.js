@@ -1,6 +1,6 @@
 'use strict';
 
-class Human {
+class Member {
   #name
   #point
   constructor(name, point) {
@@ -26,8 +26,8 @@ class PointCalculator {
   valueOf(arrayOfHash) {
     for (let i = 0; i < arrayOfHash.length; i++) {
       let hash = arrayOfHash[i];
-      let human = new Human(hash.name, hash.point);
-      this.#results.push(human);
+      let member = new Member(hash.name, hash.point);
+      this.#results.push(member);
     }
   }
 
@@ -60,8 +60,8 @@ class PointCalculator {
   }
 
   addMember(member) {
-    let human = new Human(member.name, member.point);
-    this.#results.push(human);
+    let newMember = new Member(member.name, member.point);
+    this.#results.push(newMember);
   }
 }
 
