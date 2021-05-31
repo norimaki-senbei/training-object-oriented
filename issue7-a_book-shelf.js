@@ -73,15 +73,9 @@ class Bookshelf {
 class DebugBookshelf extends Bookshelf {
 
   addBook(book) {
-    // 自分自身（this）のcanAddBookメソッドを呼び出す
-    if (!this.canAddBook(book)) {
-      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: false`);
-      return false;
-    } else {
-      this.books.push(book);
-      console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
-      return true;
-    }
+    const addable = super.addBook(book);
+    console.debug(`引数: ${JSON.stringify(book)}, 戻り値: ${addable}`);
+    return addable;
   }
 
   findBookByTitle(title) {
@@ -109,7 +103,7 @@ function createBookshelf() {
   } else {
     return new Bookshelf;
   }
-  }
+}
 
 let bookshelf = createBookshelf();
 

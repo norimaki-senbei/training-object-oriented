@@ -17,60 +17,46 @@ class Member {
 }
 
 class PointCalculator {
-  #results
-  #sum
-
+  #members
   constructor(name, point) {
-    this.#results = []
+    this.#members = []
   }
-  valueOf(arrayOfHash) {
-    for (let i = 0; i < arrayOfHash.length; i++) {
-      let hash = arrayOfHash[i];
-      let member = new Member(hash.name, hash.point);
-      this.#results.push(member);
+  valueOf(initialMembers) {
+    for (let i = 0; i < initialMembers.length; i++) {
+      let initialMember = initialMembers[i];
+      let member = new Member(initialMember.name, initialMember.point);
+      this.#members.push(member);
     }
   }
 
   sumPoints() {
     //reduce使って書き換える
-    const list = this.getPointList();
-    const sum = list.reduce((prev, current) => {
-      return prev + current;
-    }, 0)
-    return sum;
+    return this.#members.reduce((total, current) => total + current.getPoint(), 0);
   }
 
   avaragePoitns() {
-    return this.sumPoints()/this.#results.length;
-  }
-
-  getPointList() {
-    const list = this.#results.map((result) => {
-      return result.getPoint();
-    })
-    return list
+    return this.sumPoints()/this.#members.length;
   }
 
   getHighestScore() {
-    const list = this.getPointList();
-    const highestPoint = list.reduce((prev, current) => {
-      return prev > current ? prev : current;
-    }, 0);
-    const index = list.indexOf(highestPoint);
-    return this.#results[index].getName();
+    function compareFunc(a, b) {
+     return b.getPoint() - a.getPoint();
+    }
+    const sort = this.#members.sort(compareFunc)
+    return sort[0].getName();
   }
 
   addMember(member) {
-    let newMember = new Member(member.name, member.point);
-    this.#results.push(newMember);
+    const newMember = new Member(member.name, member.point);
+    this.#members.push(newMember);
   }
 }
 
-let results = [{name: '鈴木', point: 80}, {name: '田中', point: 92}, {name: '佐藤', point: 75}];
+const memberData = [{name: '鈴木', point: 80}, {name: '田中', point: 92}, {name: '佐藤', point: 75}];
 
 
-let pointCalculator = new PointCalculator;
-pointCalculator.valueOf(results);
+const pointCalculator = new PointCalculator;
+pointCalculator.valueOf(memberData);
 
 
 console.log("合計得点："+pointCalculator.sumPoints());
