@@ -46,10 +46,7 @@ class Bookshelf {
   }
 
   findBookByTitle(title) {
-    for(let i = 0; i < this.books.length; i++) {
-      if (this.books[i].getTitle() === title) return this.books[i];
-    }
-    return null;
+    return this.books.find(book => book.title === title);
   }
 
   sumPageSize() {
@@ -79,19 +76,20 @@ class DebugBookshelf extends Bookshelf {
   }
 
   findBookByTitle(title) {
-    for(let i = 0; i < this.books.length; i++) {
-      if (this.books[i].getTitle() === title) {
-        console.debug(`引数: ${title}, 戻り値: ${JSON.stringify(this.books[i])}`);
-        return this.books[i];
-      }
+    const book = super.findBookByTitle(title);
+    if(book !== undefined) {
+      console.debug(`引数: ${title}, 戻り値: ${JSON.stringify(book)}`);
+      return book;
+    } else {
+      console.debug(`引数: ${title}, 戻り値: null`);
+      return null;
     }
-    console.debug(`引数: ${title}, 戻り値: null`);
-    return null;
   }
 
   canAddBook(book) {
-    console.debug(`引数: ${JSON.stringify(book)}, 戻り値: true`);
-    return true; // デフォルトでは何も制限を行わないのでどんな時も本を追加できる
+    const addable = super.canAddBook(book);
+    console.debug(`引数: ${JSON.stringify(book)}, 戻り値: ${addable}`);
+    return addable;
   }
 
 }
