@@ -105,7 +105,7 @@ class LimitedBookshelf extends Bookshelf {
 
 class RejectedBocchanBooksshelf extends Bookshelf {
   constructor() {
-  super();
+   super();
   }
   addBook(book) {
     // 自分自身（this）のcanAddBookメソッドを呼び出す
