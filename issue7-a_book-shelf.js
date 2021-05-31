@@ -102,8 +102,7 @@ class DebugBookshelf extends Bookshelf {
 
 }
 
-
-process.env.NODE_ENV ='development';
+//NODE_ENV =development node issue7-a_book-shelf.jsで実行するとdebugの方
 function createBookshelf() {
   if(process.env.NODE_ENV === 'development') {
     return new DebugBookshelf;
