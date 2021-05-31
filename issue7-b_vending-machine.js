@@ -31,11 +31,11 @@ class VendingMachine {
     this.stock = [];
   }
 
-  static valueOf(arrayOfHash) {
+  static valueOf(initialItems) {
     let vendingMachine = new this;
-    for (let i = 0; i < arrayOfHash.length; i++) {
-      let hash = arrayOfHash[i];
-      let item = new Item(hash.name, hash.price);
+    for (let i = 0; i < initialItems.length; i++) {
+      let initialItem = initialItems[i];
+      let item = new Item(initialItem.name, initialItem.price);
       vendingMachine.addItem(item);
     }
     return vendingMachine;
@@ -78,8 +78,8 @@ class VendingMachine {
   }
 }
 
-let item = [{ name: 'コーラ', price: 120 }, { name: 'お茶', price: 80 }, { name: 'お茶', price: 80 }, { name: 'オレンジジュース', price: 100 }, { name: 'コーラ', price: 120 }]
-let vendingMachine = VendingMachine.valueOf(item);
+const itemData = [{ name: 'コーラ', price: 120 }, { name: 'お茶', price: 80 }, { name: 'お茶', price: 80 }, { name: 'オレンジジュース', price: 100 }, { name: 'コーラ', price: 120 }]
+const vendingMachine = VendingMachine.valueOf(itemData);
 
 console.log(vendingMachine.buy('お茶', 80));
 console.log(vendingMachine.buy('お茶', 10));
